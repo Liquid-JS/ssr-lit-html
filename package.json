@@ -1,6 +1,6 @@
 {
   "name": "ssr-lit-html",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "ssr-lit-html.js",
   "license": "MIT",
   "files": [

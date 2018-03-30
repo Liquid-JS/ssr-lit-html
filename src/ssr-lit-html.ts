@@ -446,7 +446,5 @@ export function render(
 
     const fragment = instance._clone();
     instance.update(result.values);
-    console.log(serialize(fragment));
+    return serialize(fragment);
 }
-
-render(html`<a title="${'<a href="sdfsd"></a>'}">${[1, 2, 3].map((n) => html`<span>s dfgsd fgsdf gds f ${n} sgsdf gsdf gsdg sdfg</span>`)}</a>`);
