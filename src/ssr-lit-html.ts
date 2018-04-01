@@ -1,5 +1,5 @@
 import { TemplateResult, SVGTemplateResult, templateCaches, TemplatePart, marker, markerRegex, lastAttributeNameRegex, TemplateFactory, Part, SinglePart, MultiPart, TemplateInstance, AttributePart, getValue, directiveValue, isPrimitiveValue } from 'nlit-html';
-import { parseFragment, AST, serialize } from 'parse5/lib';
+import { parse, parseFragment, AST, serialize } from 'parse5/lib';
 
 export interface ISsrTemplateResult {
     getSsrTemplateElement(): AST.DocumentFragment;
@@ -9,7 +9,12 @@ export interface ITemplateResult extends TemplateResult, ISsrTemplateResult { }
 
 export class SsrTemplateResult extends TemplateResult implements ISsrTemplateResult {
     getSsrTemplateElement(): AST.DocumentFragment {
-        return (<AST.Default.DocumentFragment>parseFragment(this.getHTML()));
+        const htmlCont = this.getHTML();
+        if (htmlCont.trim().toUpperCase().startsWith('<!DOCTYPE') ||
+            htmlCont.trim().toUpperCase().startsWith('<HTML'))
+            return parse(htmlCont);
+
+        return parseFragment(htmlCont);
     }
 }
 
@@ -172,7 +177,7 @@ export class SsrTemplateInstance {
     }
 }
 
-const instances = new Map();
+// const instances = new Map();
 
 export type ChildNode = { parentNode: AST.Default.ParentNode } & AST.Default.Node;
 
@@ -430,23 +435,21 @@ export function render(
     result: ITemplateResult,
     templateFactory: TemplateFactory = <any>defaultTemplateFactory) {
     const template = templateFactory(result);
-    let instance = instances.get(defaultTemplateFactory);
+    /*let instance = instances.get(defaultTemplateFactory);
 
     // Repeat render, just call update()
     if (instance !== undefined && instance.template === template &&
         instance._partCallback === result.partCallback) {
         instance.update(result.values);
         return;
-    }
+    }*/
 
     // First render, create a new TemplateInstance and append it
-    instance =
+    const instance =
         new SsrTemplateInstance(template, <any>result.partCallback, templateFactory);
-    instances.set(defaultTemplateFactory, instance);
+    //instances.set(defaultTemplateFactory, instance);
 
     const fragment = instance._clone();
     instance.update(result.values);
-    console.log(serialize(fragment));
+    return serialize(fragment);
 }
-
-render(html`<a title="${'<a href="sdfsd"></a>'}">${[1, 2, 3].map((n) => html`<span>s dfgsd fgsdf gds f ${n} sgsdf gsdf gsdg sdfg</span>`)}</a>`);
