@@ -166,7 +166,7 @@ export class SsrTemplateInstance {
             let part = parts[i];
             recursiveWalker(fragment, (orNode) => {
                 index++;
-                if (part && index === part.index) {
+                while (part && index === part.index) {
                     this._parts.push(this._partCallback(this, part, orNode));
                     i++;
                     part = parts[i];
