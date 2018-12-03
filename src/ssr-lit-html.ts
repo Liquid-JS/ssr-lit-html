@@ -1,5 +1,6 @@
-import { TemplateResult, SVGTemplateResult, templateCaches, TemplatePart, marker, markerRegex, lastAttributeNameRegex, TemplateFactory, Part, SinglePart, MultiPart, TemplateInstance, AttributePart, getValue, directiveValue, isPrimitiveValue } from 'nlit-html';
-import { parse, parseFragment, AST, serialize } from 'parse5/lib';
+import { AttributePart, directiveValue, getValue, isPrimitiveValue, lastAttributeNameRegex, marker, markerRegex, MultiPart, Part, SinglePart, SVGTemplateResult, templateCaches, TemplateFactory, TemplateInstance, TemplatePart, TemplateResult } from 'nlit-html';
+import * as AST from 'parse5';
+import { parse, parseFragment, serialize } from 'parse5';
 
 export interface ISsrTemplateResult {
     getSsrTemplateElement(): AST.DocumentFragment;
@@ -20,7 +21,7 @@ export class SsrTemplateResult extends TemplateResult implements ISsrTemplateRes
 
 export class SsrSVGTemplateResult extends SVGTemplateResult implements ISsrTemplateResult {
     getSsrTemplateElement(): AST.DocumentFragment {
-        return (<AST.Default.DocumentFragment>parseFragment(this.getHTML())).childNodes[0];
+        return (<AST.DefaultTreeDocumentFragment>parseFragment(this.getHTML())).childNodes[0];
     }
 }
 
@@ -44,7 +45,7 @@ export function defaultTemplateFactory(result: ITemplateResult) {
     return template;
 }
 
-function recursiveWalker(node: AST.DocumentFragment | AST.Default.Element, cb: (node: AST.Default.Element | AST.Default.Node) => void) {
+function recursiveWalker(node: AST.DocumentFragment | AST.DefaultTreeElement, cb: (node: AST.DefaultTreeElement | AST.DefaultTreeNode) => void) {
     if (node) {
         cb(<any>node);
         if ('childNodes' in node && Array.isArray(node.childNodes)) {
@@ -67,7 +68,7 @@ export class Template {
         recursiveWalker(element, (orNode) => {
             index++;
             if ('attrs' in orNode) {
-                const node = <AST.Default.Element>orNode;
+                const node = <AST.DefaultTreeElement>orNode;
                 const attributes = node.attrs || [];
                 // Per https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
                 // attributes are not guaranteed to be returned in document order. In
@@ -102,10 +103,10 @@ export class Template {
                     }
                 }
             } else if (orNode && orNode.nodeName === '#comment') {
-                const node = <AST.Default.CommentNode>orNode;
-                if (node.data && node.data === marker) {
+                const node = <AST.DefaultTreeTextNode>orNode;
+                if (node['data'] && node['data'] === marker) {
                     this.parts.push(new TemplatePart('node', index));
-                    const tNode = <AST.Default.TextNode>orNode;
+                    const tNode = <AST.DefaultTreeTextNode>orNode;
                     tNode.nodeName = '#text';
                     tNode.value = '';
                     Object.keys(tNode)
@@ -121,7 +122,7 @@ export class Template {
 }
 
 export type PartCallback =
-    (instance: SsrTemplateInstance, templatePart: TemplatePart, node: AST.Default.Element | AST.Default.Node) =>
+    (instance: SsrTemplateInstance, templatePart: TemplatePart, node: AST.DefaultTreeElement | AST.DefaultTreeNode) =>
         Part;
 
 const CircularJSON = require('circular-json-es6');
@@ -153,7 +154,7 @@ export class SsrTemplateInstance {
         }
     }
 
-    _clone(): AST.Default.DocumentFragment {
+    _clone(): AST.DefaultTreeDocumentFragment {
         const fragment = CircularJSON.parse(CircularJSON.stringify(this.template.element));
         const parts = this.template.parts;
 
@@ -179,7 +180,7 @@ export class SsrTemplateInstance {
 
 // const instances = new Map();
 
-export type ChildNode = { parentNode: AST.Default.ParentNode } & AST.Default.Node;
+export type ChildNode = { parentNode: AST.DefaultTreeParentNode } & AST.DefaultTreeNode;
 
 function nextNode(node: ChildNode): ChildNode {
     if (!node || !node.parentNode)
@@ -266,10 +267,10 @@ export class SsrNodePart implements SinglePart {
             // set its value, rather than replacing it.
             // TODO(justinfagnani): Can we just check if _previousValue is
             // primitive?
-            const tNode = <AST.Default.TextNode>node;
+            const tNode = <AST.DefaultTreeTextNode>node;
             tNode.value = asStr(value);
         } else {
-            this._setNode({ nodeName: '#text', value: asStr(value) } as AST.Default.TextNode);
+            this._setNode({ nodeName: '#text', value: asStr(value) } as AST.DefaultTreeTextNode);
         }
         this._previousValue = value;
     }
@@ -324,7 +325,7 @@ export class SsrNodePart implements SinglePart {
                 // node, and fix up the previous part's endNode to point to it
                 if (partIndex > 0) {
                     const previousPart = itemParts[partIndex - 1];
-                    itemStart = previousPart.endNode = { nodeName: '#text', value: '' } as AST.Default.TextNode;
+                    itemStart = previousPart.endNode = { nodeName: '#text', value: '' } as AST.DefaultTreeTextNode;
                     this._insert(itemStart);
                 }
                 itemPart = new SsrNodePart(this.instance, itemStart, this.endNode);
@@ -366,7 +367,7 @@ export class SsrNodePart implements SinglePart {
  * (exclusive), from `container`.
  */
 export const removeNodes =
-    (container: AST.Default.ParentNode, startNode: ChildNode | null, endNode: ChildNode | null = null):
+    (container: AST.DefaultTreeParentNode, startNode: ChildNode | null, endNode: ChildNode | null = null):
         void => {
         let node = startNode;
         while (node !== endNode) {
@@ -399,7 +400,7 @@ export class SsrAttributePart extends AttributePart {
             value = this._interpolate(values, startIndex);
         }
         if (value !== directiveValue) {
-            const el: AST.Default.Element = <any>this.element;
+            const el: AST.DefaultTreeElement = <any>this.element;
             if (!el.attrs.find((attr) => {
                 if (attr.name === this.name) {
                     attr.value = asStr(value);
