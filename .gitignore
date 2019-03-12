@@ -5,14 +5,8 @@
 /tools/lib/
 
 # Compiler output
-/ssr-lit-html.d.ts
-/ssr-lit-html.js
-/ssr-lit-html.js.map
-/test/**/*.d.ts
-/test/**/*.js
-/test/**/*.js.map
-
-yarn.lock
+/dist
+*.tgz
 
 # Logs
 logs
