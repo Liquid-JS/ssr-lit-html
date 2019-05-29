@@ -36,16 +36,16 @@ function templateDivFactory(result: TemplateResult): HTMLDivElement {
 }
 
 import * as litHtml from 'nlit-html'
-import { asyncAppend } from 'nlit-html/directives/async-append';
-import { asyncReplace } from 'nlit-html/directives/async-replace';
-import { cache } from 'nlit-html/directives/cache';
-import { classMap } from 'nlit-html/directives/class-map';
-import { guard } from 'nlit-html/directives/guard';
-import { ifDefined } from 'nlit-html/directives/if-defined';
-import { repeat } from 'nlit-html/directives/repeat';
-import { styleMap } from 'nlit-html/directives/style-map';
-import { unsafeHTML } from 'nlit-html/directives/unsafe-html';
-import { until } from 'nlit-html/directives/until';
+import { asyncAppend } from 'nlit-html/directives/async-append'
+import { asyncReplace } from 'nlit-html/directives/async-replace'
+import { cache } from 'nlit-html/directives/cache'
+import { classMap } from 'nlit-html/directives/class-map'
+import { guard } from 'nlit-html/directives/guard'
+import { ifDefined } from 'nlit-html/directives/if-defined'
+import { repeat } from 'nlit-html/directives/repeat'
+import { styleMap } from 'nlit-html/directives/style-map'
+import { unsafeHTML } from 'nlit-html/directives/unsafe-html'
+import { until } from 'nlit-html/directives/until'
 
 function render(result: TemplateResult, options?: Partial<RenderOptions>): string {
     const div = templateDivFactory(result)
