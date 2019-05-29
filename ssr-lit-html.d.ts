@@ -1,3 +1,13 @@
 export * from 'nlit-html';
+export { asyncAppend } from 'nlit-html/directives/async-append';
+export { asyncReplace } from 'nlit-html/directives/async-replace';
+export { cache } from 'nlit-html/directives/cache';
+export { classMap } from 'nlit-html/directives/class-map';
+export { guard } from 'nlit-html/directives/guard';
+export { ifDefined } from 'nlit-html/directives/if-defined';
+export { repeat } from 'nlit-html/directives/repeat';
+export { styleMap } from 'nlit-html/directives/style-map';
+export { unsafeHTML } from 'nlit-html/directives/unsafe-html';
+export { until } from 'nlit-html/directives/until';
 export * from './dist/lib';
 export { render } from './dist/lib';
