@@ -11,8 +11,7 @@ export default {
     },
     plugins: [
         nodeResolve({
-            jsnext: true,
-            main: true
+            mainFields: ['jsnext', 'jsnext:main', 'main']
         }),
         commonjs({
             extensions: ['.js', '.json']
