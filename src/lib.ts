@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs'
-import { minify } from 'html-minifier'
+import { minify } from 'html-minifier-terser'
 import { JSDOM } from 'jsdom'
 import * as litHtml from 'nlit-html'
 import { join } from 'path'

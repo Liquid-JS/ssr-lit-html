@@ -1,6 +1,6 @@
 {
     "name": "ssr-lit-html",
-    "version": "1.1.2-1",
+    "version": "1.1.2-2",
     "main": "ssr-lit-html.js",
     "license": "MIT",
     "files": [
@@ -15,21 +15,21 @@
         "prepack": "npm run build"
     },
     "dependencies": {
-        "html-minifier": "^4.0.0",
-        "jsdom": "^16.0.1",
+        "html-minifier-terser": "^5.0.5",
+        "jsdom": "^16.2.2",
         "nlit-html": "^1.1.2"
     },
     "devDependencies": {
-        "@types/html-minifier": "^3.5.3",
-        "@types/jsdom": "^12.2.4",
-        "@types/node": "^13.5.0",
-        "rollup": "^1.29.1",
+        "@types/html-minifier-terser": "^5.0.0",
+        "@types/jsdom": "^16.2.1",
+        "@types/node": "^13.13.4",
+        "rollup": "^2.7.3",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-node-resolve": "^5.2.0",
-        "rollup-plugin-terser": "^5.2.0",
-        "ts-node": "^8.6.2",
-        "tslint": "^6.0.0",
-        "typescript": "^3.7.5"
+        "rollup-plugin-terser": "^5.3.0",
+        "ts-node": "^8.9.1",
+        "tslint": "^6.1.2",
+        "typescript": "^3.8.3"
     },
     "typings": "ssr-lit-html.d.ts",
     "repository": "https://github.com/Liquid-JS/ssr-lit-html.git",
