@@ -1,4 +1,6 @@
 export * from 'nlit-html';
+export * as directive from 'nlit-html/directive';
+export * as directiveHelpers from 'nlit-html/directive-helpers';
 export { asyncAppend } from 'nlit-html/directives/async-append';
 export { asyncReplace } from 'nlit-html/directives/async-replace';
 export { cache } from 'nlit-html/directives/cache';

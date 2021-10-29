@@ -1,21 +1,20 @@
-import { render as orgRender, RenderOptions, TemplateResult } from 'nlit-html'
-import { marker } from 'nlit-html/lib/template'
+import { marker, render as orgRender, RenderOptions, TemplateResult } from 'nlit-html'
 
 interface TemplateDivCache {
     stringsArray: WeakMap<TemplateStringsArray, HTMLDivElement>
     keyString: Map<string, HTMLDivElement>
 }
 
-const templateDivCaches = new Map<string, TemplateDivCache>()
+const templateDivCaches = new Map<number, TemplateDivCache>()
 
 function templateDivFactory(result: TemplateResult): HTMLDivElement {
-    let templateCache = templateDivCaches.get(result.type)
+    let templateCache = templateDivCaches.get(result['_$litType$'])
     if (templateCache === undefined) {
         templateCache = {
             stringsArray: new WeakMap<TemplateStringsArray, HTMLDivElement>(),
             keyString: new Map<string, HTMLDivElement>()
         }
-        templateDivCaches.set(result.type, templateCache)
+        templateDivCaches.set(result['_$litType$'], templateCache)
     }
 
     let template = templateCache.stringsArray.get(result.strings)
@@ -36,6 +35,8 @@ function templateDivFactory(result: TemplateResult): HTMLDivElement {
 }
 
 import * as litHtml from 'nlit-html'
+import * as directive from 'nlit-html/directive'
+import * as directiveHelpers from 'nlit-html/directive-helpers'
 import { asyncAppend } from 'nlit-html/directives/async-append'
 import { asyncReplace } from 'nlit-html/directives/async-replace'
 import { cache } from 'nlit-html/directives/cache'
@@ -55,6 +56,8 @@ function render(result: TemplateResult, options?: Partial<RenderOptions>): strin
 
 window['litHtmlLib'] = {
     ...litHtml,
+    directive,
+    directiveHelpers,
     asyncAppend,
     asyncReplace,
     cache,
