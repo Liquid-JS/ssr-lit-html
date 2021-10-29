@@ -1,5 +1,4 @@
 import { readFileSync } from 'fs'
-import { minify } from 'html-minifier-terser'
 import { JSDOM } from 'jsdom'
 import * as litHtml from 'nlit-html'
 import { join } from 'path'
@@ -17,11 +16,6 @@ const lib: nlithtml = window['litHtmlLib']
 
 Object.assign(exports, lib)
 
-export async function render(result: litHtml.TemplateResult, options?: Partial<litHtml.RenderOptions>): Promise<string> {
-    return minify(lib.render(result, options), {
-        decodeEntities: true,
-        collapseBooleanAttributes: true,
-        preserveLineBreaks: true,
-        removeComments: true
-    })
+export function render(result: litHtml.TemplateResult, options?: Partial<litHtml.RenderOptions>): string {
+    return lib.render(result, options).replace(/<!---->/g, '')
 }
