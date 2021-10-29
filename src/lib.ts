@@ -17,7 +17,7 @@ const lib: nlithtml = window['litHtmlLib']
 
 Object.assign(exports, lib)
 
-export function render(result: litHtml.TemplateResult, options?: Partial<litHtml.RenderOptions>): string {
+export async function render(result: litHtml.TemplateResult, options?: Partial<litHtml.RenderOptions>): Promise<string> {
     return minify(lib.render(result, options), {
         decodeEntities: true,
         collapseBooleanAttributes: true,

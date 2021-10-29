@@ -1,6 +1,6 @@
 import { html, render } from './ssr-lit-html'
 
-console.log(render(html`
+render(html`
 <!doctype HTML>
 <html>
 
@@ -14,4 +14,4 @@ console.log(render(html`
 </body>
 
 </html>
-`))
+`).then(console.log)
